@@ -106,8 +106,8 @@ Handles all authentication flows, including **email verification**, **OTP login*
 - Email token verification system  
 - Wallet balance credit/debit tracking  
 
-📸 *Example:*  
-![Accounts Module](images/accounts_module.png)
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/f0c8228e-713f-476a-9a4b-163e86e485bf" />
+
 
 ---
 
@@ -123,10 +123,10 @@ Manages categories, product details, banners, and images.
 **Highlights:**
 - Vendor-linked product uploads  
 - Category-wise product display  
-- Flipkart-style banner carousel  
+  
 
-📸  
-![Products Module](images/products_module.png)
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/8b944e53-4878-41a9-bc80-25f357fa6f9e" />
+
 
 ---
 
@@ -140,7 +140,8 @@ Handles the entire checkout and order lifecycle.
 - Order status tracking  
 
 📸  
-![Checkout Page](images/checkout.png)
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/0b778410-30a3-4ec9-b786-6ad37fc19648" />
+
 
 ---
 
@@ -157,8 +158,8 @@ Separate dashboards for both **Admin** and **Vendor**.
 - Manage product inventory  
 - Wallet and earning statistics  
 
-📸  
-![Dashboard](images/dashboard.png)
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/5194a8e5-dd40-4361-882d-673ab1582bb1" />
+
 
 ---
 
@@ -189,8 +190,8 @@ Includes homepage UI, notification logic, and subscription management.
   - Priority notifications  
   - Special coupons  
 
-📸  
-![Prime Subscription](images/prime_subscription.png)
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/33e3849c-77f1-49c7-8bc0-02d57ef5525a" />
+
 
 ---
 
@@ -211,8 +212,8 @@ C registers using B’s referral
   - Updates wallet balances through `WalletTransaction`.
 - Wallet can be used for purchases or Prime renewals.
 
-📸  
-![Referral Wallet](images/referral_wallet.png)
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/3a9f6da4-7037-4329-9241-b077c03ee6c4" />
+
 
 ---
 
