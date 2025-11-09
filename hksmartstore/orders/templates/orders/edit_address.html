@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5" style="font-family: 'Signika', sans-serif; max-width: 600px;">
+  <h4 class="fw-semibold mb-4 text-primary">
+    <i class="bi bi-pencil-square me-2"></i> Edit Address
+  </h4>
+
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <form method="POST" action="{% url 'edit_address' address.id %}">
+        {% csrf_token %}
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Full Name</label>
+          <input type="text" name="full_name" class="form-control" value="{{ address.full_name }}" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Phone Number</label>
+          <input type="text" name="phone" class="form-control" value="{{ address.phone }}" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Street Address</label>
+          <textarea name="street_address" class="form-control" rows="2" required>{{ address.street_address }}</textarea>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">City</label>
+            <input type="text" name="city" class="form-control" value="{{ address.city }}" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">State</label>
+            <input type="text" name="state" class="form-control" value="{{ address.state }}" required>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Pincode</label>
+          <input type="text" name="zip_code" class="form-control" value="{{ address.zip_code }}" required>
+        </div>
+
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" name="is_default" id="defaultAddress" {% if address.is_default %}checked{% endif %}>
+          <label class="form-check-label fw-semibold" for="defaultAddress">
+            Set as default address
+          </label>
+        </div>
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary px-4 fw-semibold">Update</button>
+          <a href="{% url 'address_list' %}" class="btn btn-outline-secondary fw-semibold ms-2">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+ 
+
+{% endblock %}

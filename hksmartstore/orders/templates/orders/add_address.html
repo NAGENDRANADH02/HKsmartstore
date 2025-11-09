@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5" style="font-family: 'Signika', sans-serif; max-width: 650px;">
+
+  <!-- 🏠 Page Title -->
+  <h4 class="fw-semibold mb-4 text-primary">
+    <i class="bi bi-geo-alt-fill me-2"></i> Add New Address
+  </h4>
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body p-4">
+
+      <form method="POST" action="{% url 'add_address' %}">
+        {% csrf_token %}
+
+        <!-- 👤 Full Name -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Full Name</label>
+          <input type="text" name="full_name" class="form-control rounded-pill" placeholder="Enter full name" required>
+        </div>
+
+        <!-- ☎ Phone Number -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Phone Number</label>
+          <input type="text" name="phone" class="form-control rounded-pill" placeholder="Enter phone number" required>
+        </div>
+
+        <!-- 🏡 Address Line 1 -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Address Line 1</label>
+          <textarea name="address_line_1" class="form-control rounded-4" rows="2" placeholder="Flat, House No., Building, Company" required></textarea>
+        </div>
+
+        <!-- 📍 Address Line 2 -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Address Line 2 (optional)</label>
+          <textarea name="address_line_2" class="form-control rounded-4" rows="2" placeholder="Area, Street, Landmark"></textarea>
+        </div>
+
+        <!-- 🏙 City & State -->
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">City</label>
+            <input type="text" name="city" class="form-control rounded-pill" placeholder="City" required>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">State</label>
+            <input type="text" name="state" class="form-control rounded-pill" placeholder="State" required>
+          </div>
+        </div>
+
+        <!-- 🏷 Postal Code -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Postal Code</label>
+          <input type="text" name="postal_code" class="form-control rounded-pill" placeholder="Enter postal code" required>
+        </div>
+
+        <!-- 🌎 Country -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Country</label>
+          <input type="text" name="country" class="form-control rounded-pill" value="India" required>
+        </div>
+
+        <!-- ⭐ Default Checkbox -->
+        <div class="form-check mb-4">
+          <input class="form-check-input" type="checkbox" name="is_default" id="defaultAddress">
+          <label class="form-check-label fw-semibold" for="defaultAddress">
+            Set as default address
+          </label>
+        </div>
+
+        <!-- 💾 Buttons -->
+        <div class="d-flex justify-content-center gap-3">
+          <button type="submit" class="btn btn-primary px-5 fw-semibold rounded-pill">
+            <i class="bi bi-save me-2"></i>Save Address
+          </button>
+          <a href="{% url 'address_list' %}" class="btn btn-outline-secondary px-5 fw-semibold rounded-pill">
+            Cancel
+          </a>
+        </div>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

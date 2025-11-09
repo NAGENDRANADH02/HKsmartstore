@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container text-center my-5" style="font-family: 'Signika', sans-serif;">
+    
+    <!-- ✅ Success Animation -->
+    <div class="success-animation mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130.2 130.2" class="checkmark">
+            <circle class="checkmark__circle" cx="65.1" cy="65.1" r="62.1" fill="none"/>
+            <path class="checkmark__check" fill="none" d="M34.4 65.9l21.2 21.2 40.8-40.8"/>
+        </svg>
+    </div>
+
+    <h3 class="fw-semibold text-success">Order Placed Successfully!</h3>
+    <p class="text-muted mb-4">Thank you for shopping with <strong>HK Smart Store</strong>.</p>
+
+    <!-- 🔹 Order Summary Card -->
+    <div class="card shadow-sm border-0 mx-auto" style="max-width: 600px;">
+        <div class="card-body text-start">
+            <h5 class="fw-semibold mb-3 text-primary">Order Details</h5>
+
+            <p class="mb-1"><strong>Order ID:</strong> {{ order.id }}</p>
+            <p class="mb-1"><strong>Total Amount:</strong> ₹{{ order.total_amount }}</p>
+            <p class="mb-1"><strong>Payment Method:</strong> {{ order.payment_method }}</p>
+            <p class="mb-1"><strong>Delivery Address:</strong> {{ order.address.full_name }}, 
+                {{ order.address.street_address }}, {{ order.address.city }} - {{ order.address.zip_code }}</p>
+
+            <hr>
+            <p class="text-muted small">Estimated Delivery: 
+                <strong>{{ estimated_delivery|default:"3-5 Business Days" }}</strong></p>
+        </div>
+    </div>
+
+    <a href="/" class="btn btn-primary mt-4 fw-semibold px-4 py-2">
+        <i class="bi bi-house-door-fill me-2"></i>Continue Shopping
+    </a>
+</div>
+
+<!-- ✅ Success Animation CSS -->
+<style>
+.checkmark {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: block;
+  stroke-width: 4;
+  stroke: #4bb543;
+  stroke-miterlimit: 10;
+  box-shadow: inset 0px 0px 0px #4bb543;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
+  margin: 0 auto;
+}
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 4;
+  stroke-miterlimit: 10;
+  stroke: #4bb543;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+@keyframes stroke {
+  100% { stroke-dashoffset: 0; }
+}
+@keyframes scale {
+  0%, 100% { transform: none; }
+  50% { transform: scale3d(1.1, 1.1, 1); }
+}
+@keyframes fill {
+  100% { box-shadow: inset 0px 0px 0px 50px #4bb543; }
+}
+</style>
+
+
+
+{% endblock %}
+<script>
+setTimeout(() => {
+  window.location.href = "/";
+}, 5000); // 5 seconds
+</script>

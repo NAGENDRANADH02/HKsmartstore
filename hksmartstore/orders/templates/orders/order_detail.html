@@ -1,0 +1,187 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5" style="font-family: 'Signika', sans-serif;">
+
+  <!-- 🔹 Page Header -->
+  <h4 class="fw-semibold mb-4">
+    <i class="bi bi-bag-check text-primary me-2"></i> Order Details
+  </h4>
+
+  <!-- 🔹 Order Summary Card -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body d-flex justify-content-between flex-wrap">
+      <div>
+        <h6 class="fw-semibold mb-1">Order ID: <span class="text-primary">#{{ order.id }}</span></h6>
+        <p class="text-muted mb-1">Placed on: {{ order.created_at|date:"M d, Y" }}</p>
+        <p class="text-muted mb-0">Payment Method: <strong>{{ order.payment_method }}</strong></p>
+      </div>
+      <div>
+        <span class="badge 
+          {% if order.status == 'Delivered' %}bg-success
+          {% elif order.status == 'Shipped' %}bg-info
+          {% elif order.status == 'Out for Delivery' %}bg-warning text-dark
+          {% else %}bg-secondary
+          {% endif %} 
+          px-3 py-2 rounded-pill fs-6">
+          {{ order.status }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Order Tracking Progress Bar -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h6 class="fw-semibold mb-3 text-primary"><i class="bi bi-truck me-2"></i>Delivery Progress</h6>
+
+      <div class="progress-track">
+        <ul id="progressbar">
+          <li class="{% if order.status in 'Ordered Shipped Out for Delivery Delivered' %}active{% endif %}">Ordered</li>
+          <li class="{% if order.status in 'Shipped Out for Delivery Delivered' %}active{% endif %}">Shipped</li>
+          <li class="{% if order.status in 'Out for Delivery Delivered' %}active{% endif %}">Out for Delivery</li>
+          <li class="{% if order.status == 'Delivered' %}active{% endif %}">Delivered</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Product Items -->
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body">
+    <h6 class="fw-semibold text-primary mb-3">
+      <i class="bi bi-box-seam me-2"></i>Items in this Order
+    </h6>
+
+    {% for item in order.items.all %}
+    <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-3">
+      <div class="d-flex align-items-center">
+        {% if item.product.images.all %}
+          <img src="{{ item.product.images.first.image.url }}"
+               alt="{{ item.product.name }}"
+               class="rounded"
+               style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #ddd;">
+        {% else %}
+          <img src="{% static 'images/no-image.png' %}"
+               alt="No image"
+               class="rounded"
+               style="width: 80px; height: 80px; object-fit: cover; border: 1px solid #ddd;">
+        {% endif %}
+        <div class="ms-3">
+          <h6 class="fw-semibold mb-1">{{ item.product.name }}</h6>
+          <p class="text-muted small mb-1">{{ item.product.description|truncatewords:10 }}</p>
+          <h6 class="text-success mb-0">₹{{ item.product.price }}</h6>
+        </div>
+      </div>
+      <div>
+        <p class="text-muted small mb-0">Qty: {{ item.quantity }}</p>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted">No products found in this order.</p>
+    {% endfor %}
+  </div>
+</div>
+
+
+  <!-- 🔹 Delivery Address -->
+  <div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+      <h6 class="fw-semibold text-primary mb-3"><i class="bi bi-geo-alt-fill me-2"></i>Delivery Address</h6>
+      <p class="mb-0">
+        <strong>{{ order.address.full_name }}</strong><br>
+        {{ order.address.street_address }}, {{ order.address.city }}, {{ order.address.state }} - {{ order.address.zip_code }}<br>
+        <span class="text-muted small">Phone: {{ order.address.phone }}</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- 🔹 Payment Summary -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h6 class="fw-semibold text-primary mb-3"><i class="bi bi-wallet2 me-2"></i>Payment Summary</h6>
+      <div class="d-flex justify-content-between mb-2">
+        <span>Subtotal</span>
+        <span>₹{{ order.subtotal }}</span>
+      </div>
+      <div class="d-flex justify-content-between mb-2 text-success">
+        <span>Discount</span>
+        <span>- ₹{{ order.discount }}</span>
+      </div>
+      <div class="d-flex justify-content-between fw-semibold mt-2">
+        <span>Total Amount</span>
+        <span>₹{{ order.total_amount }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Continue Button -->
+  <div class="text-center mt-4">
+    <a href="{% url 'order_list' %}" class="btn btn-outline-primary fw-semibold px-4 py-2">
+      <i class="bi bi-arrow-left-circle me-2"></i>Back to Orders
+    </a>
+  </div>
+
+</div>
+
+<!-- ✅ Progress Bar Styles -->
+<style>
+.progress-track {
+  margin-top: 20px;
+}
+#progressbar {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-between;
+  counter-reset: step;
+  list-style: none;
+}
+#progressbar li {
+  text-align: center;
+  position: relative;
+  width: 25%;
+  font-size: 14px;
+  color: #999;
+}
+#progressbar li:before {
+  content: counter(step);
+  counter-increment: step;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  border: 2px solid #d3d3d3;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: #fff;
+}
+#progressbar li.active:before {
+  border-color: #2874f0;
+  background-color: #2874f0;
+  color: #fff;
+}
+#progressbar li.active {
+  color: #2874f0;
+}
+#progressbar li:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #d3d3d3;
+  top: 15px;
+  left: -50%;
+  z-index: -1;
+}
+#progressbar li:first-child:after {
+  content: none;
+}
+#progressbar li.active + li:after {
+  background: #2874f0;
+}
+</style>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white text-center py-3 rounded-top-4">
+          <h4 class="mb-0 fw-bold" style="font-family: 'Signika', sans-serif;">
+            <i class="fa fa-user-circle me-2"></i>Vendor Profile
+          </h4>
+        </div>
+        <div class="card-body p-4">
+          <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Business Name</label>
+              <input type="text" name="business_name" class="form-control rounded-pill"
+                     value="{{ vendor.business_name }}" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">First Name</label>
+              <input type="text" name="first_name" class="form-control rounded-pill"
+                     value="{{ vendor.first_name }}">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Last Name</label>
+              <input type="text" name="last_name" class="form-control rounded-pill"
+                     value="{{ vendor.last_name }}">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Email</label>
+              <input type="email" class="form-control rounded-pill" value="{{ vendor.email }}" readonly>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Phone Number</label>
+              <input type="text" class="form-control rounded-pill" value="{{ vendor.phone_number }}" readonly>
+            </div>
+
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary px-4 rounded-pill fw-semibold">
+                <i class="fa fa-save me-2"></i>Save Changes
+              </button>
+              <a href="{% url 'vendor_dashboard' %}" class="btn btn-outline-secondary px-4 rounded-pill ms-2">
+                Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

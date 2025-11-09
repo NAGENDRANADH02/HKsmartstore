@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <h3 class="text-success fw-bold mb-4">
+    <i class="fas fa-box-open me-2"></i> Manage Products
+  </h3>
+
+  <table class="table table-hover align-middle shadow-sm">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Vendor</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr id="product-row-{{ product.id }}">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.vendor.display_name }}</td>
+        <td>₹{{ product.price }}</td>
+        <td class="status-cell">
+          {% if product.status == 'approved' %}
+            <span class="badge bg-success">Approved</span>
+          {% elif product.status == 'rejected' %}
+            <span class="badge bg-danger">Rejected</span>
+          {% elif product.status == 'pending' %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% else %}
+            <span class="badge bg-secondary">Unknown</span>
+          {% endif %}
+        </td>
+
+        <td>
+          <button data-id="{{ product.id }}" data-action="approve"
+            class="btn btn-success btn-sm approve-btn me-1">Approve</button>
+          <button data-id="{{ product.id }}" data-action="reject"
+            class="btn btn-danger btn-sm reject-btn">Reject</button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">No products found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ✅ AJAX SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const csrfToken = "{{ csrf_token }}"; // CSRF token
+
+  // Attach listeners to approve/reject buttons
+  document.querySelectorAll(".approve-btn, .reject-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      const productId = this.dataset.id;
+      const action = this.dataset.action;
+
+      fetch(`/dashboard/admin/products/${action}/${productId}/`, {
+                method: "POST",
+            headers: {
+                    "X-CSRFToken": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest",
+                    "Cache-Control": "no-cache"
+                },
+            cache: "no-store"
+        })
+
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          const row = document.getElementById(`product-row-${productId}`);
+          const statusCell = row.querySelector(".status-cell");
+
+          // Update badge instantly
+          statusCell.innerHTML = data.badge_html;
+
+          // Show a small success popup
+          showToast(data.message, data.status);
+        } else {
+          alert("Something went wrong!");
+        }
+      })
+      .catch(() => alert("Server error"));
+    });
+  });
+
+  // ✅ Small floating toast
+  function showToast(msg, type) {
+    const toast = document.createElement("div");
+    toast.className = `position-fixed top-0 end-0 m-3 p-3 rounded text-white shadow-lg ${
+      type === "success" ? "bg-success" : "bg-danger"
+    }`;
+    toast.style.zIndex = 9999;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  }
+});
+</script>
+{% endblock %}

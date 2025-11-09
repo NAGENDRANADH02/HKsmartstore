@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5 text-center">
+  <h3>💳 Payment Gateway (Coming Soon)</h3>
+  <p>Razorpay integration will be added later. Click below to simulate payment.</p>
+
+  <form method="POST">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-success">Simulate Payment Success</button>
+  </form>
+</div>
+{% endblock %}

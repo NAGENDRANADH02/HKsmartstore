@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-5">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body text-center p-4">
+          <h4 class="fw-bold text-primary mb-3">Verify OTP</h4>
+          <p class="text-muted mb-4">We’ve sent an OTP to your registered email.</p>
+          <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="otp" class="form-control rounded-pill text-center mb-3" placeholder="Enter OTP" required>
+            <button type="submit" class="btn btn-primary w-100 rounded-pill fw-semibold py-2">Verify OTP</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

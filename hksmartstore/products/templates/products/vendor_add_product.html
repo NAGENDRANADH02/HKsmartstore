@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card border-0 shadow-lg rounded-4">
+        <div class="card-header bg-primary text-white rounded-top-4 py-3 text-center">
+          <h4 class="fw-bold mb-0" style="font-family: 'Signika', sans-serif;">
+            <i class="fa fa-plus-circle me-2"></i>Add New Product
+          </h4>
+        </div>
+
+        <div class="card-body p-4">
+          <form method="POST" enctype="multipart/form-data" id="addProductForm">
+            {% csrf_token %}
+
+            <!-- Product Name -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Product Name</label>
+              <input type="text" name="name" class="form-control rounded-pill" placeholder="Enter product name" required>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Description</label>
+              <textarea name="description" class="form-control rounded-4" rows="3" placeholder="Enter product description"></textarea>
+            </div>
+
+            <!-- Category -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Category</label>
+              <select name="category" class="form-select rounded-pill" required>
+                <option value="">-- Select Category --</option>
+                {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Price (₹)</label>
+              <input type="number" name="price" class="form-control rounded-pill" min="1" step="0.01" required>
+            </div>
+
+            <!-- Stock Quantity -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Stock Quantity</label>
+              <input type="number" name="stock" class="form-control rounded-pill" min="0" step="1" required>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Upload Product Images</label>
+              <input type="file" name="images" accept="image/*" class="form-control rounded-pill" id="imageInput" multiple required>
+              <small class="text-muted">You can select multiple images (Ctrl or Shift + Click)</small>
+            </div>
+
+            <!-- Preview for Multiple Images -->
+            <div id="previewContainer" class="d-flex flex-wrap gap-2 justify-content-center mt-3"></div>
+
+            <!-- Submit -->
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary px-4 rounded-pill fw-semibold">
+                <i class="fa fa-save me-2"></i>Add Product
+              </button>
+              <a href="{% url 'vendor_product_list' %}" class="btn btn-outline-secondary px-4 rounded-pill ms-2">
+                Cancel
+              </a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'core/footer.html' %}
+
+<!-- 💡 JS for Multiple Image Preview -->
+<script>
+document.getElementById("imageInput").addEventListener("change", function(event) {
+  const previewContainer = document.getElementById("previewContainer");
+  previewContainer.innerHTML = ""; // Clear old previews
+
+  const files = event.target.files;
+  if (files.length > 0) {
+    for (const file of files) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement("img");
+        img.src = e.target.result;
+        img.classList.add("shadow-sm", "rounded-3");
+        img.style.height = "100px";
+        img.style.width = "100px";
+        img.style.objectFit = "cover";
+        previewContainer.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+
+    <!-- Sidebar -->
+    <div class="col-md-3 col-lg-2 sidebar bg-white shadow-sm p-3 rounded-4">
+      <h5 class="text-center text-primary fw-bold mb-4">
+        <i class="fas fa-user-shield me-2"></i>Admin Panel
+      </h5>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link active" href="#"><i class="fas fa-chart-line me-2"></i> Dashboard Overview</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'admin_vendors' %}"><i class="fas fa-store me-2"></i> Vendors</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'admin_products' %}"><i class="fas fa-box-open me-2"></i> Products</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'admin_customers' %}"><i class="fas fa-users me-2"></i> Customers</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'admin_orders' %}"><i class="fas fa-shopping-cart me-2"></i> Orders</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fas fa-percent me-2"></i> Coupons</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fas fa-bell me-2"></i> Notifications</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'admin_approved_products' %}">
+            <i class="fas fa-check-circle me-2"></i> Approved Products
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <a class="btn btn-outline-danger w-100 fw-semibold" href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt me-2"></i> Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Main Dashboard Content -->
+    <div class="col-md-9 col-lg-10 px-4">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-primary">Admin Dashboard</h3>
+        <button class="btn btn-primary btn-sm">
+          <i class="fas fa-plus me-2"></i>Add New Vendor
+        </button>
+      </div>
+
+      <!-- Dashboard Cards -->
+      <div class="row g-4">
+        <div class="col-md-3 col-sm-6">
+          <div class="card shadow-sm border-0 stat-card">
+            <div class="card-body text-center">
+              <i class="fas fa-store text-primary fa-2x mb-2"></i>
+              <h5 class="fw-semibold">Total Vendors</h5>
+              <h3 class="fw-bold text-dark">{{ total_vendors }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card shadow-sm border-0 stat-card">
+            <div class="card-body text-center">
+              <i class="fas fa-box-open text-success fa-2x mb-2"></i>
+              <h5 class="fw-semibold">Total Products</h5>
+              <h3 class="fw-bold text-dark">{{ total_products }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card shadow-sm border-0 stat-card">
+            <div class="card-body text-center">
+              <i class="fas fa-users text-warning fa-2x mb-2"></i>
+              <h5 class="fw-semibold">Customers</h5>
+              <h3 class="fw-bold text-dark">{{ total_customers }}</h3>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6">
+          <div class="card shadow-sm border-0 stat-card">
+            <div class="card-body text-center">
+              <i class="fas fa-shopping-cart text-danger fa-2x mb-2"></i>
+              <h5 class="fw-semibold">Orders</h5>
+              <h3 class="fw-bold text-dark">{{ total_orders }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔹 Prime Subscription Approvals -->
+      <div class="card mt-5 shadow-sm border-0">
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0 fw-semibold"><i class="fas fa-crown me-2"></i>Pending Prime Subscriptions</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>User</th>
+                <th>Email</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sub in subscriptions %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ sub.user.username }}</td>
+                <td>{{ sub.user.email }}</td>
+                <td>
+                  {% if sub.payment_status %}
+                    <span class="badge bg-success">Paid</span>
+                  {% else %}
+                    <span class="badge bg-secondary">Pending</span>
+                  {% endif %}
+                </td>
+                <td>
+                  {% if sub.status == 'approved' %}
+                    <span class="badge bg-success">Approved</span>
+                  {% elif sub.status == 'rejected' %}
+                    <span class="badge bg-danger">Rejected</span>
+                  {% else %}
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  {% endif %}
+                </td>
+                <td>{{ sub.subscribed_at|date:"M d, Y" }}</td>
+                <td>
+                  <a href="{% url 'approve_subscription' sub.id %}" class="btn btn-sm btn-success me-1">
+                    <i class="fas fa-check"></i>
+                  </a>
+                  <a href="{% url 'reject_subscription' sub.id %}" class="btn btn-sm btn-danger">
+                    <i class="fas fa-times"></i>
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" class="text-center text-muted py-4">No pending subscriptions.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Activity Table -->
+      <div class="card mt-5 shadow-sm border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h5 class="mb-0 fw-semibold"><i class="fas fa-history me-2"></i>Recent Activities</h5>
+          <a href="#" class="btn btn-light btn-sm fw-semibold">View All</a>
+        </div>
+        <div class="card-body">
+          <table class="table table-striped align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Activity</th>
+                <th>User</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% if recent_activities %}
+                {% for activity in recent_activities %}
+                <tr>
+                  <td>{{ forloop.counter }}</td>
+                  <td>{{ activity.activity|safe }}</td>
+                  <td>{{ activity.user }}</td>
+                  <td>{{ activity.date }}</td>
+                  <td><span class="badge bg-{{ activity.badge_class }}">{{ activity.status }}</span></td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="5" class="text-center text-muted">No recent activity</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Optional Styling -->
+<style>
+  .sidebar .nav-link {
+    color: #333;
+    font-weight: 500;
+    border-radius: 10px;
+    transition: 0.3s;
+  }
+  .sidebar .nav-link:hover,
+  .sidebar .nav-link.active {
+    background-color: #e9f1ff;
+    color: #0d6efd;
+    font-weight: 600;
+  }
+  .stat-card {
+    transition: all 0.3s ease;
+  }
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+</style>
+{% endblock %}

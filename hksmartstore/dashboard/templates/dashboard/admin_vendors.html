@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <h3 class="text-primary fw-bold mb-4"><i class="fas fa-store me-2"></i> Manage Vendors</h3>
+
+  <table class="table table-hover align-middle shadow-sm">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Vendor Name</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Joined</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for vendor in vendors %}
+      <tr>
+        <td>{{ forloop.counter }}</td>
+        <td>{{ vendor.display_name }}</td>
+        <td>{{ vendor.email }}</td>
+        <td>
+          {% if vendor.status == 'approved' %}
+            <span class="badge bg-success">Approved</span>
+          {% elif vendor.status == 'pending' %}
+            <span class="badge bg-warning text-dark">Pending</span>
+          {% else %}
+            <span class="badge bg-danger">Rejected</span>
+          {% endif %}
+        </td>
+        <td>{{ vendor.date_joined|date:"M d, Y" }}</td>
+        <td>
+          <a href="{% url 'approve_vendor' vendor.id %}" class="btn btn-success btn-sm">Approve</a>
+          <a href="{% url 'reject_vendor' vendor.id %}" class="btn btn-warning btn-sm">Reject</a>
+          <a href="{% url 'delete_vendor' vendor.id %}" class="btn btn-danger btn-sm">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">No vendors found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

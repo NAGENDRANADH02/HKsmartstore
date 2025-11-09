@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout | HK Smart Store{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <h3 class="fw-bold text-primary mb-4">Checkout</h3>
+
+  <!-- 🔹 Address Section -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-light fw-semibold">Select Delivery Address</div>
+    <div class="card-body">
+      {% if addresses %}
+        {% for address in addresses %}
+          <div class="form-check mb-3">
+            <input class="form-check-input" type="radio" name="selected_address_id"
+                   value="{{ address.id }}" id="address{{ address.id }}"
+                   {% if address.is_default %}checked{% endif %}>
+            <label class="form-check-label" for="address{{ address.id }}">
+              <strong>{{ address.full_name }}</strong><br>
+              {{ address.address_line_1 }}, {{ address.city }}, {{ address.state }} - {{ address.postal_code }}<br>
+              <small>{{ address.country }}</small>
+            </label>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="text-muted">No saved addresses found. <a href="{% url 'add_address' %}">Add a new one</a>.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- 🔹 Order Summary -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-light fw-semibold">Order Summary</div>
+    <div class="card-body">
+      {% for item in cart_items %}
+        <div class="d-flex justify-content-between border-bottom py-2">
+          <div>{{ item.product.name }}</div>
+          <div>₹{{ item.product.price }}</div>
+        </div>
+      {% endfor %}
+      <hr>
+      <div class="d-flex justify-content-between fw-bold">
+        <span>Total:</span>
+        <span>₹{{ final_price }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Payment + Place Order Form -->
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form method="POST" action="{% url 'place_order' %}">
+        {% csrf_token %}
+
+        <!-- Hidden address input populated by JS -->
+        <input type="hidden" name="selected_address_id" id="selectedAddressInput" value="">
+        <input type="hidden" name="payment_method" value="COD">
+
+        <div class="text-end">
+          <button type="submit" class="btn btn-primary px-4 py-2 fw-semibold rounded-pill">
+            <i class="bi bi-bag-check me-2"></i>Place Order
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</div>
+
+<!-- ✅ JS to copy selected radio button value to hidden input -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const radios = document.querySelectorAll('input[name="selected_address_id"]');
+  const hiddenInput = document.getElementById('selectedAddressInput');
+
+  radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      hiddenInput.value = radio.value;
+    });
+  });
+
+  // Preselect default address on page load
+  const checked = document.querySelector('input[name="selected_address_id"]:checked');
+  if (checked) hiddenInput.value = checked.value;
+});
+</script>
+
+{% endblock %}

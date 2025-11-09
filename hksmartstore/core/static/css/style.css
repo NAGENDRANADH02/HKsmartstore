@@ -1,0 +1,628 @@
+/* ============================================================
+   🌐 HK SmartStore — Master Stylesheet
+   Cleaned + Optimized Flipkart-style UI
+   ============================================================ */
+
+/* ✅ Global Font Setup */
+body {
+  font-family: 'Signika', sans-serif;
+  background-color: #f8f9fc;
+  color: #333;
+}
+
+/* ============================================================
+   🔹 NAVBAR
+   ============================================================ */
+.navbar {
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 10px 20px;
+  z-index: 100;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: #2874f0 !important;
+}
+
+.navbar-brand img {
+  height: 30px;
+}
+
+/* Centered Search Bar */
+.flex-grow-1 {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 500px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  border-radius: 50px;
+  padding: 10px 18px;
+  border: 1.5px solid #e0e0e0;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  background-color: #f8f9fa;
+}
+
+.search-input:focus {
+  border-color: #1E90FF;
+  box-shadow: 0 0 8px rgba(30, 144, 255, 0.2);
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: #aaa;
+  transition: color 0.3s ease;
+}
+
+.search-input:focus::placeholder {
+  color: #1E90FF;
+}
+
+.search-btn {
+  background: linear-gradient(135deg, #1E90FF, #0AB6F2);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  margin-left: -45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.search-btn:hover {
+  background: linear-gradient(135deg, #0AB6F2, #1E90FF);
+  transform: scale(1.05);
+}
+
+.search-btn i {
+  font-size: 16px;
+}
+
+/* Responsive Search */
+@media (max-width: 992px) { .search-bar { max-width: 350px; } }
+@media (max-width: 768px) { .search-bar { max-width: 250px; } }
+
+/* ============================================================
+   🛍️ CATEGORY BAR
+   ============================================================ */
+.category-bar {
+  background: #fff;
+  overflow-x: auto;
+  white-space: nowrap;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.category-card {
+  flex: 1;
+  min-width: 120px;
+  max-width: 160px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+
+.category-card:hover { transform: translateY(-5px); }
+
+.category-img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid #e0e0e0;
+  transition: border-color 0.3s ease;
+}
+
+.category-img:hover { border-color: #2874f0; }
+
+.category-name {
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1a237e;
+}
+
+/* ============================================================
+   🖼️ HERO CAROUSEL
+   ============================================================ */
+.hero-img {
+  height: 350px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 15px 20px;
+  border-radius: 10px;
+}
+
+.carousel-caption h2 { font-size: 1.8rem; }
+.carousel-caption p { font-size: 1rem; margin-bottom: 8px; }
+
+@media (max-width: 768px) {
+  .hero-img { height: 160px; }
+  .carousel-caption { font-size: 0.9rem; padding: 10px; }
+  .carousel-caption h2 { font-size: 1.2rem; }
+}
+
+/* ============================================================
+   🔁 CATEGORY SECTION
+   ============================================================ */
+.category-section { position: relative; }
+
+.category-left {
+  height: 300px;
+  display: flex;
+  align-items: end;
+  justify-content: start;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.category-left .bg-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  padding: 15px;
+}
+
+.category-left h4 {
+  font-family: 'Signika', sans-serif;
+  font-weight: 600;
+}
+
+/* ============================================================
+   🌊 PRODUCT SCROLL ROWS
+   ============================================================ */
+.scroll-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 0.9rem;
+  scroll-behavior: smooth;
+  white-space: nowrap;
+  padding-bottom: 12px;
+  scrollbar-width: none;
+}
+.scroll-container::-webkit-scrollbar { display: none; }
+
+.scroll-card {
+  flex: 0 0 auto;
+  width: clamp(180px, 20vw, 260px);
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scroll-card img {
+  height: clamp(160px, 18vw, 220px);
+  width: 100%;
+  object-fit: cover;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  transition: transform 0.4s ease;
+}
+
+.scroll-card:hover img { transform: scale(1.08); }
+
+.scroll-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.2);
+}
+
+.scroll-card .card-body {
+  padding: 12px 10px;
+  text-align: center;
+  background-color: #fff;
+}
+
+/* ============================================================
+   🧩 ADMIN DASHBOARD
+   ============================================================ */
+.sidebar {
+  min-height: 85vh;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.sidebar .nav-link {
+  color: #333;
+  font-weight: 500;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  transition: all 0.3s ease;
+}
+
+.sidebar .nav-link i { color: #2874f0; }
+
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active {
+  background: #e9f3ff;
+  color: #2874f0;
+  font-weight: 600;
+}
+
+.stat-card {
+  border-radius: 15px;
+  background: #ffffff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================
+   🖼️ PRODUCT DETAIL PAGE
+   ============================================================ */
+.main-image {
+  height: 400px;
+  object-fit: contain;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.main-image:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.thumb-img {
+  width: 65px;
+  height: 65px;
+  object-fit: cover;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+.thumb-img:hover {
+  border: 2px solid #2874f0;
+  transform: scale(1.08);
+  box-shadow: 0 4px 10px rgba(40, 116, 240, 0.3);
+}
+
+/* ============================================================
+   💫 PRODUCT CARD HOVER EFFECTS (Listing + Category + Related)
+   ============================================================ */
+.card.hover-scale {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+.card.hover-scale:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+.card.hover-scale img {
+  transition: transform 0.4s ease;
+}
+.card.hover-scale:hover img {
+  transform: scale(1.07);
+}
+.card.hover-scale:hover .card-title {
+  color: #2874f0;
+  transition: color 0.3s ease;
+}
+.card.hover-scale .btn-outline-primary {
+  transition: all 0.3s ease;
+}
+.card.hover-scale .btn-outline-primary:hover {
+  background-color: #2874f0;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* ============================================================
+   💫 RELATED PRODUCTS SECTION (Product Detail Page)
+   ============================================================ */
+
+.related-products-container {
+  margin-top: 2rem;
+}
+
+.related-products-container h5 {
+  font-family: 'Signika', sans-serif;
+  font-weight: 700;
+  color: #2874f0;
+  margin-bottom: 1rem;
+}
+
+/* Scrollable Row */
+.related-products-scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.2rem;
+  scroll-behavior: smooth;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(40, 116, 240, 0.3) transparent;
+}
+
+/* Chrome scrollbar style */
+.related-products-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.related-products-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(40, 116, 240, 0.3);
+  border-radius: 4px;
+}
+
+/* 🔹 Card Wrapper */
+.related-products-scroll .card {
+  flex: 0 0 auto;
+  width: 220px;                /* ✅ consistent width */
+  height: 320px;               /* ✅ consistent height */
+  border: none;
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.related-products-scroll .card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* 🔹 Product Image */
+.related-products-scroll .card-img-top {
+  height: 200px;               /* ✅ fixed height for all images */
+  width: 100%;
+  object-fit: cover;           /* ✅ ensures uniform crop and size */
+  object-position: center;
+  background-color: #f8f9fa;
+  transition: transform 0.3s ease;
+}
+
+.related-products-scroll .card:hover .card-img-top {
+  transform: scale(1.05);
+}
+
+/* 🔹 Product Info */
+.related-products-scroll .card-body {
+  background: #fff;
+  text-align: center;
+  padding: 10px 8px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Product Name */
+.related-products-scroll .card-body .text-truncate {
+  font-weight: 600;
+  color: #212529;
+  font-size: 0.9rem;
+  line-height: 1.2;
+  height: 2.4em; /* two-line cap */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  margin-bottom: 6px;
+}
+
+.related-products-scroll .card:hover .text-truncate {
+  color: #2874f0;
+}
+
+/* Price Text */
+.related-products-scroll .card-body p.fw-bold {
+  color: #2874f0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+/* 🔹 Smooth hover scale animation for entire card */
+.hover-scale {
+  transition: all 0.3s ease;
+}
+
+.hover-scale:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* ============================================================
+   ✅ RESPONSIVE BEHAVIOR
+   ============================================================ */
+@media (max-width: 768px) {
+  .related-products-scroll .card {
+    width: 180px;
+    height: 280px;
+  }
+  .related-products-scroll .card-img-top {
+    height: 160px;
+  }
+}
+
+/* ============================================================
+   ✅ RESPONSIVE BEHAVIOR
+   ============================================================ */
+@media (max-width: 768px) {
+  .related-products-scroll .card {
+    width: 180px;
+    height: 280px;
+  }
+  .related-products-scroll .card-img-top {
+    height: 160px;
+  }
+}
+
+/* ============================================================
+   🌐 FOOTER
+   ============================================================ */
+.footer {
+  background: linear-gradient(135deg, #0B1C3F 0%, #0E255E 100%);
+  color: #D9E6FF;
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px;
+  position: relative;
+  overflow: hidden;
+  padding-top: 50px;
+}
+
+.footer h6 {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 18px;
+  text-transform: uppercase;
+  position: relative;
+}
+.footer h6::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: #1E90FF;
+  border-radius: 2px;
+}
+.footer-link {
+  color: #BFD4FF;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 6px;
+  transition: all 0.3s ease;
+}
+.footer-link:hover {
+  color: #1E90FF;
+  transform: translateX(3px);
+}
+.footer .social-links a {
+  color: #D9E6FF;
+  font-size: 18px;
+  margin-right: 15px;
+  transition: all 0.3s ease;
+}
+.footer .social-links a:hover {
+  color: #1E90FF;
+  transform: scale(1.2);
+}
+.footer .social-links i {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 50%;
+}
+.footer img {
+  border-radius: 5px;
+  transition: transform 0.3s ease;
+}
+.footer img:hover { transform: scale(1.05); }
+
+.footer-bottom {
+  background: #08142F;
+  border-top: 1px solid #1F2D56;
+  padding: 15px 0;
+  color: #9FB6E6;
+  font-size: 13px;
+}
+.footer-bottom .payment-icons img {
+  opacity: 0.85;
+  transition: all 0.3s ease;
+}
+.footer-bottom .payment-icons img:hover {
+  opacity: 1;
+  transform: scale(1.1);
+}
+.footer::before,
+.footer::after {
+  content: "";
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  filter: blur(40px);
+}
+.footer::before {
+  top: -50px;
+  right: -50px;
+  background: radial-gradient(circle at center, rgba(30,144,255,0.3), transparent 70%);
+}
+.footer::after {
+  bottom: -40px;
+  left: -40px;
+  background: radial-gradient(circle at center, rgba(14,37,94,0.4), transparent 70%);
+}
+.footer > * { position: relative; z-index: 2; }
+
+/* ============================================================
+   ✅ END OF MASTER STYLESHEET
+   ============================================================ */
+/* 🌐 MOBILE RESPONSIVE FIXES */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden !important;
+  }
+
+  .navbar {
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+
+  .navbar-brand {
+    font-size: 1rem;
+  }
+
+  .search-bar {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .category-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    padding: 10px;
+  }
+
+  .category-card {
+    min-width: 90px;
+    max-width: 100px;
+  }
+
+  .category-img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 20px 10px;
+  }
+}
+.card {
+  border-radius: 15px;
+}
+.card-header {
+  font-weight: 600;
+}

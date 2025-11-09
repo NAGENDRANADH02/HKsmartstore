@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 rounded-4">
+        <div class="card-body text-center py-4">
+          <img src="{% static 'images/vendor_join.png' %}" alt="Become Vendor" width="100" class="mb-3">
+          <h4 class="fw-bold text-primary">Become a Vendor</h4>
+          <p class="text-muted mb-4">
+            Join HK Smart Store as a vendor and start selling your products online.
+          </p>
+
+          {% if request.user.is_authenticated %}
+          <form method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-semibold">
+              <i class="bi bi-shop me-2"></i> Register as Vendor
+            </button>
+          </form>
+          {% else %}
+          <a href="{% url 'vendor_register' %}" class="btn btn-primary rounded-pill px-4 fw-semibold">
+            <i class="bi bi-person-plus me-2"></i> Sign up as Vendor
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'core/footer.html' %}
+
+{% endblock %}

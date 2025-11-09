@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">🎉 Subscribe & Earn — HK SmartStore Prime</h2>
+
+  <div class="card p-4 shadow-sm">
+    <h4>Prime Plan Details</h4>
+    <ul>
+      <li>Exclusive Discounts on All Products</li>
+      <li>Priority Delivery</li>
+      <li>Early Access to Sales</li>
+      <li>Special Prime-Only Offers</li>
+    </ul>
+
+    <h5 class="mt-4">Terms & Conditions</h5>
+    <p class="small text-muted">
+      By subscribing to HK SmartStore Prime, you agree to all the terms and conditions 
+      of service including non-refundable policy after payment.
+    </p>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-check my-3">
+        <input class="form-check-input" type="checkbox" name="agree" id="agree">
+        <label class="form-check-label" for="agree">
+          I have read and agree to the Terms & Conditions.
+        </label>
+      </div>
+      {% if error %}
+      <p class="text-danger">{{ error }}</p>
+      {% endif %}
+      <button type="submit" class="btn btn-primary w-100">Buy Now</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

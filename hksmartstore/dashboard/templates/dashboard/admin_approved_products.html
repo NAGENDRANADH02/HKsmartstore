@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+  <h3 class="text-success fw-bold mb-4">
+    <i class="fas fa-check-circle me-2"></i> Approved Products
+  </h3>
+
+  <table class="table table-hover align-middle shadow-sm">
+    <thead class="table-light">
+      <tr>
+        <th>#</th>
+        <th>Product</th>
+        <th>Vendor</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for product in products %}
+      <tr id="product-row-{{ product.id }}">
+        <td>{{ forloop.counter }}</td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.vendor.display_name }}</td>
+        <td>₹{{ product.price }}</td>
+        <td>{{ product.stock }}</td>
+        <td>
+          <button data-id="{{ product.id }}" class="btn btn-danger btn-sm delete-btn">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">No approved products found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<!-- ✅ AJAX Delete Script -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const csrfToken = "{{ csrf_token }}";
+
+  document.querySelectorAll(".delete-btn").forEach(btn => {
+    btn.addEventListener("click", function() {
+      const productId = this.dataset.id;
+      if (!confirm("Are you sure you want to delete this product?")) return;
+
+      fetch(`/dashboard/admin/products/delete/${productId}/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrfToken,
+          "X-Requested-With": "XMLHttpRequest"
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById(`product-row-${productId}`).remove();
+          showToast(data.message, "danger");
+        }
+      })
+      .catch(() => alert("Server error"));
+    });
+  });
+
+  function showToast(msg, type) {
+    const toast = document.createElement("div");
+    toast.className = `position-fixed top-0 end-0 m-3 p-3 rounded text-white shadow ${
+      type === "danger" ? "bg-danger" : "bg-success"
+    }`;
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2000);
+  }
+});
+</script>
+{% endblock %}

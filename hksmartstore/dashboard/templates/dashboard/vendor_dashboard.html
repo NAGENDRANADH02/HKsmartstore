@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid mt-3">
+  <div class="row">
+    <!-- 🧭 Sidebar -->
+    <div class="col-md-3 col-lg-2 bg-light sidebar p-3 rounded-3 shadow-sm">
+      <h5 class="text-primary fw-bold mb-4">Vendor Panel</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a href="{% url 'vendor_dashboard' %}" class="nav-link active">
+            <i class="fa fa-chart-line me-2"></i>Dashboard
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'vendor_product_list' %}" class="nav-link">
+            <i class="fa fa-box me-2"></i>My Products
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'vendor_add_product' %}" class="nav-link">
+            <i class="fa fa-plus-circle me-2"></i>Add Product
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'vendor_orders' %}" class="nav-link">
+            <i class="fa fa-shopping-bag me-2"></i>Orders
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'vendor_profile' %}" class="nav-link">
+            <i class="fa fa-user me-2"></i>Profile
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="{% url 'logout' %}" class="nav-link text-danger">
+            <i class="fa fa-sign-out-alt me-2"></i>Logout
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 🧱 Main Content -->
+    <div class="col-md-9 col-lg-10">
+      <!-- 🔹 Summary Cards -->
+      <div class="row mb-4">
+        <div class="col-md-3">
+          <div class="card text-center border-0 shadow-sm p-3">
+            <h6>Total Products</h6>
+            <h4 class="text-primary fw-bold">{{ total_products }}</h4>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center border-0 shadow-sm p-3">
+            <h6>Total Orders</h6>
+            <h4 class="text-success fw-bold">{{ total_orders }}</h4>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center border-0 shadow-sm p-3">
+            <h6>Total Revenue</h6>
+            <h4 class="text-warning fw-bold">₹{{ total_revenue|floatformat:2 }}</h4>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card text-center border-0 shadow-sm p-3">
+            <h6>Pending Orders</h6>
+            <h4 class="text-danger fw-bold">
+              {{ orders|dictsort:"payment_status" |length }}
+            </h4>
+          </div>
+        </div>
+      </div>
+
+      <!-- 🔹 Recent Orders Table -->
+      <div class="card border-0 shadow-sm mb-5">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+          <h6 class="mb-0">Recent Orders</h6>
+          <a href="{% url 'vendor_orders' %}" class="btn btn-light btn-sm fw-semibold">
+            View All
+          </a>
+        </div>
+        <div class="card-body">
+          {% if orders %}
+          <div class="table-responsive">
+            <table class="table table-striped align-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Product</th>
+                  <th>Customer</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders|slice:":5" %}
+                  {% for item in order.items.all %}
+                  <tr>
+                    <td>{{ forloop.parentloop.counter }}</td>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ order.user.first_name }} {{ order.user.last_name }}</td>
+                    <td>₹{{ item.product.price }}</td>
+                    <td>
+                      {% if order.payment_status == 'Completed' %}
+                        <span class="badge bg-success">Delivered</span>
+                      {% elif order.payment_status == 'Pending' %}
+                        <span class="badge bg-warning text-dark">Pending</span>
+                      {% else %}
+                        <span class="badge bg-info text-dark">{{ order.payment_status }}</span>
+                      {% endif %}
+                    </td>
+                    <td>{{ order.created_at|date:"M d, Y" }}</td>
+                  </tr>
+                  {% endfor %}
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% else %}
+            <p class="text-muted text-center mb-0">No recent orders found.</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'core/footer.html' %}
+{% endblock %}

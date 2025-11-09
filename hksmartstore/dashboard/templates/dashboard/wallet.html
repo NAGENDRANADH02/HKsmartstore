@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container py-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold text-primary">💰 My Wallet</h2>
+    <p class="text-muted">Track your earnings and referral rewards</p>
+  </div>
+
+  <!-- Current Wallet Balance -->
+  <div class="card shadow-sm border-0 rounded-4 mb-5">
+    <div class="card-body text-center py-4">
+      <h5 class="text-muted mb-2">Available Balance</h5>
+      <h1 class="fw-bold text-success mb-3">₹{{ profile.wallet_balance|floatformat:2 }}</h1>
+
+      <div class="d-flex justify-content-center align-items-center flex-wrap gap-2">
+        <span class="fw-semibold text-muted">Referral Code:</span>
+        <span class="badge bg-light text-dark px-3 py-2">{{ profile.referral_code }}</span>
+
+        <button class="btn btn-outline-primary btn-sm rounded-pill"
+                onclick="copyReferralLink()">
+          <i class="bi bi-clipboard-check me-1"></i> Copy Invite Link
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transaction History -->
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-header bg-primary text-white fw-semibold rounded-top-4">
+      Transaction History
+    </div>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for tx in transactions %}
+          <tr>
+            <td>{{ tx.created_at|date:"M d, Y H:i" }}</td>
+            <td>
+              {% if tx.transaction_type == 'credit' %}
+                <span class="text-success fw-semibold"><i class="bi bi-arrow-up-right-circle me-1"></i>Credit</span>
+              {% else %}
+                <span class="text-danger fw-semibold"><i class="bi bi-arrow-down-right-circle me-1"></i>Debit</span>
+              {% endif %}
+            </td>
+            <td class="fw-bold">₹{{ tx.amount }}</td>
+            <td class="text-muted small">{{ tx.description|default:"-" }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="4" class="text-center text-muted py-4">No transactions yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+function copyReferralLink() {
+  const link = "{{ request.build_absolute_uri|cut:request.path }}accounts/register/?ref={{ profile.referral_code }}";
+  navigator.clipboard.writeText(link);
+  alert("Referral link copied!");
+}
+</script>
+{% endblock %}

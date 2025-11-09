@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container text-center py-5" style="min-height:60vh;">
+  {% if subscription.status == 'approved' %}
+    <h2 class="text-success fw-bold mb-3">🎉 Prime Membership Active!</h2>
+    <p class="lead text-dark">
+      Congratulations! Your HK SmartStore Prime membership is now <strong>approved</strong>.<br>
+      Start sharing your referral code and earn rewards!
+    </p>
+  {% elif subscription.status == 'rejected' %}
+    <h2 class="text-danger fw-bold mb-3">❌ Subscription Rejected</h2>
+    <p class="lead text-muted">
+      Your subscription request was rejected by admin. Please contact support for assistance.
+    </p>
+  {% else %}
+    <h2 class="text-primary fw-bold mb-3">🎉 Subscription Successful!</h2>
+    <p class="lead text-dark">
+      Thank you for subscribing to <strong>HK SmartStore Prime</strong>.<br>
+      Your membership is currently <strong>pending admin approval.</strong>
+    </p>
+  {% endif %}
+  <a href="/" class="btn btn-primary mt-3">Go to Home</a>
+</div>
+{% endblock %}

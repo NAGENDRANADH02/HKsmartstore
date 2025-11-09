@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ product.name }} | HK Smart Store{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+  <!-- 🔹 Product Detail Section -->
+  <div class="row g-4 align-items-start">
+    <!-- Product Images -->
+    <div class="col-md-5 text-center">
+      {% if product.product_images.first %}
+        <img id="mainImage" src="{{ product.product_images.first.image.url }}" alt="{{ product.name }}" class="main-image mb-3">
+      {% elif product.images.first %}
+        <img id="mainImage" src="{{ product.images.first.image.url }}" alt="{{ product.name }}" class="main-image mb-3">
+      {% else %}
+        <img id="mainImage" src="{% static 'images/default-product.png' %}" alt="No Image" class="main-image mb-3">
+      {% endif %}
+
+      <!-- Thumbnails -->
+      <div class="d-flex justify-content-center gap-2 flex-wrap">
+        {% for img in product.product_images.all %}
+          <img src="{{ img.image.url }}" alt="{{ product.name }}" class="thumb-img" onclick="changeImage('{{ img.image.url }}')">
+        {% empty %}
+          {% for img in product.images.all %}
+            <img src="{{ img.image.url }}" alt="{{ product.name }}" class="thumb-img" onclick="changeImage('{{ img.image.url }}')">
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Product Info -->
+    <div class="col-md-7">
+      <h3 class="fw-bold text-primary">{{ product.name }}</h3>
+      <p class="text-muted small">Category: {{ product.category.name }}</p>
+
+      <!-- Price -->
+      {% if product.sale_price %}
+        <h4 class="fw-bold text-success">
+          ₹{{ product.sale_price }}
+          <span class="text-muted text-decoration-line-through fs-6">₹{{ product.price }}</span>
+        </h4>
+      {% else %}
+        <h4 class="fw-bold text-primary">₹{{ product.price }}</h4>
+      {% endif %}
+
+      <!-- Description -->
+      <p class="mt-3" style="white-space: pre-line;">{{ product.description|linebreaksbr }}</p>
+
+      <!-- Stock Info -->
+      {% if product.stock > 0 %}
+        <p class="text-success fw-semibold"><i class="bi bi-check-circle me-1"></i>In Stock</p>
+      {% else %}
+        <p class="text-danger fw-semibold"><i class="bi bi-x-circle me-1"></i>Out of Stock</p>
+      {% endif %}
+
+      <!-- Buttons -->
+      <div class="mt-4 d-flex gap-3">
+        {% if product.stock > 0 %}
+          <button 
+            id="addToCartBtn"
+            data-product-id="{{ product.id }}"
+            class="btn btn-primary px-4 py-2 rounded-pill fw-semibold">
+            <i class="bi bi-cart3 me-2"></i> Add to Cart
+          </button>
+          <button 
+            id="buyNowBtn"
+            data-product-id="{{ product.id }}"
+            class="btn btn-warning px-4 py-2 rounded-pill fw-semibold text-white">
+            <i class="bi bi-lightning-charge me-2"></i> Buy Now
+          </button>
+        {% else %}
+          <button class="btn btn-secondary px-4 py-2 rounded-pill fw-semibold" disabled>
+            <i class="bi bi-cart-x me-2"></i> Out of Stock
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- 🔹 Related Products Section -->
+  <div class="mt-5">
+    <hr class="my-4">
+    <h5 class="fw-bold text-primary mb-3">Related Products</h5>
+
+    <div class="row">
+      {% if related_products %}
+        {% for item in related_products %}
+          <div class="col-md-3 col-sm-6 mb-4">
+            <div class="card border-0 shadow-sm hover-scale h-100">
+              <a href="{% url 'product_detail' item.slug %}">
+                {% if item.product_images.first %}
+                  <img src="{{ item.product_images.first.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                {% elif item.images.first %}
+                  <img src="{{ item.images.first.image.url }}" class="card-img-top" alt="{{ item.name }}">
+                {% else %}
+                  <img src="{% static 'images/default-product.png' %}" class="card-img-top" alt="{{ item.name }}">
+                {% endif %}
+              </a>
+
+              <div class="card-body text-center">
+                <h6 class="card-title fw-bold text-dark">{{ item.name|truncatechars:25 }}</h6>
+
+                {% if item.sale_price %}
+                  <p class="mb-1">
+                    <span class="text-primary fw-bold">₹{{ item.sale_price }}</span>
+                    <span class="text-muted text-decoration-line-through small">₹{{ item.price }}</span>
+                  </p>
+                {% else %}
+                  <p class="text-primary fw-semibold mb-1">₹{{ item.price }}</p>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-12 text-center">
+          <p class="text-muted">No related products found.</p>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- 🧠 JS Logic -->
+<script>
+  // Change main image
+  function changeImage(src) {
+    document.getElementById("mainImage").src = src;
+  }
+
+  // Add to Cart + Buy Now
+  document.addEventListener("DOMContentLoaded", () => {
+    const csrfToken = "{{ csrf_token }}";
+    const addBtn = document.getElementById("addToCartBtn");
+    const buyNowBtn = document.getElementById("buyNowBtn");
+
+    if (addBtn) {
+      addBtn.addEventListener("click", () => {
+        const productId = addBtn.dataset.productId;
+
+        fetch(`/orders/cart/add/${productId}/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+            "X-Requested-With": "XMLHttpRequest"
+          }
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to add to cart");
+          return response.text();
+        })
+        .then(() => showToast("✅ Added to cart successfully!"))
+        .catch(() => showToast("⚠️ Something went wrong."));
+      });
+    }
+
+    if (buyNowBtn) {
+      buyNowBtn.addEventListener("click", () => {
+        const productId = buyNowBtn.dataset.productId;
+
+        fetch(`/orders/cart/add/${productId}/`, {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": csrfToken,
+            "X-Requested-With": "XMLHttpRequest"
+          }
+        })
+        .then(response => {
+          if (!response.ok) throw new Error("Failed to add to cart");
+          return response.text();
+        })
+        .then(() => {
+          showToast("🛒 Redirecting to cart...");
+          setTimeout(() => window.location.href = "/orders/cart/", 800);
+        })
+        .catch(() => showToast("⚠️ Something went wrong."));
+      });
+    }
+
+    // Toast function
+    function showToast(message) {
+      const toast = document.createElement("div");
+      toast.className = "position-fixed top-0 end-0 m-3 p-3 bg-success text-white rounded shadow";
+      toast.style.zIndex = "9999";
+      toast.innerHTML = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2000);
+    }
+  });
+</script>
+
+{% endblock %}
