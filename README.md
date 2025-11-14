@@ -63,7 +63,7 @@ It provides a seamless shopping experience with **separate dashboards for Admin,
 - Dashboard analytics view  
 
 ✅ **Prime Subscription System**  
-- Customers can subscribe for exclusive discounts and benefits  
+- Customers can subscribe to earn and refer new users
 
 ✅ **Referral & Wallet System**  
 - Earn wallet balance when users register using referral code  
