@@ -1,5 +1,6 @@
-# 🛍️ HK SmartStore
-> **A full-stack e-commerce web application built using Django, MySQL, HTML, CSS, and Bootstrap.**
+🛍️ HK SmartStore
+A scalable full-stack e-commerce backend system built using Django, MySQL, Redis, HTML, CSS, and Bootstrap.
+
 
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/0ed8c2d6-4b6b-4e9c-b09a-8b6b28dd8504" />
 
@@ -11,6 +12,8 @@
 **HK SmartStore** is a modern, full-featured e-commerce platform — built entirely from scratch using **Python (Django)** and **MySQL**.
 
 It provides a seamless shopping experience with **separate dashboards for Admin, Vendor, and Customer**, an integrated **referral wallet system**, **email verification**, and a **Prime subscription module** — all deployed live on **PythonAnywhere**.
+The platform is designed with backend scalability in mind, incorporating system-level optimizations such as Redis-based caching for read-heavy endpoints, database fallback strategies, and production-safe deployment configurations.
+
 
 🌐 **Live Demo:** [https://nagendranadhh.pythonanywhere.com](https://nagendranadhh.pythonanywhere.com)
 
@@ -72,7 +75,22 @@ It provides a seamless shopping experience with **separate dashboards for Admin,
 - Email alerts for verification, OTP, and updates  
 
 ✅ **Responsive UI**  
-- Flipkart-inspired layout with custom CSS and mobile-optimized design  
+- Flipkart-inspired layout with custom CSS and mobile-optimized design
+- ## ⚡ System Design & Performance Optimizations
+
+HK SmartStore includes backend optimizations inspired by real-world e-commerce traffic patterns.
+
+### 🔹 Redis Caching (Cache-Aside Strategy)
+- Implemented Redis-based caching for **read-heavy endpoints**, primarily the product detail page.
+- Used a **cache-aside pattern** where the application checks Redis first and falls back to MySQL on cache misses.
+- Cached product details and related product data with **TTL-based eviction** to balance freshness and performance.
+- Designed the system to **gracefully degrade** to database reads if Redis is unavailable, ensuring correctness.
+
+### 🔹 Scalability & Trade-offs
+- Cached only **non-user-specific, read-heavy data** such as products and related items.
+- Avoided caching write-heavy or sensitive flows like carts, orders, and wallets.
+- Prioritized data consistency and system correctness over aggressive caching.
+
 
 ---
 
@@ -86,6 +104,8 @@ hksmartstore/
 ├── media/ → User and product uploaded files
 ├── templates/ → Modular HTML templates
 └── static/ → Custom CSS, JS, and images
+The application follows a modular monolithic architecture with clear domain separation and system-level optimizations at the data access layer.
+
 
 
 ---
@@ -123,7 +143,8 @@ Manages categories, product details, banners, and images.
 **Highlights:**
 - Vendor-linked product uploads  
 - Category-wise product display  
-  
+  - Optimized product detail retrieval using Redis caching to reduce repeated database queries.
+
 
 <img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/8b944e53-4878-41a9-bc80-25f357fa6f9e" />
 
@@ -249,7 +270,8 @@ python manage.py runserver
 Then visit
 👉 http://127.0.0.1:8000/
 
-🗄️ Database Schema Overview
+🗄️ Database & Data Access Design
+
 Table	Description
 Customer	Customer details and login info
 Vendor	Vendor business details
@@ -271,4 +293,6 @@ Notification	App notifications
 📱 Flutter Mobile App Integration
 
 🤖 AI-Based Recommendation Engine
+The system uses MySQL as the primary data store with Redis acting as a fast in-memory cache for selected read-heavy queries.
+
 
